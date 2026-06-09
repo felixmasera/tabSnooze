@@ -52,6 +52,10 @@ var LABEL_COLORS = [
   { bg: 'rgba(255,121,198,0.15)', border: '#ff79c6', text: '#ff79c6' },
   { bg: 'rgba(139,233,253,0.15)', border: '#8be9fd', text: '#8be9fd' },
   { bg: 'rgba(255,85,85,0.15)',   border: '#ff5555', text: '#ff5555' },
+  { bg: 'rgba(241,250,140,0.15)', border: '#f1fa8c', text: '#f1fa8c' },
+  { bg: 'rgba(128,255,234,0.15)', border: '#80ffea', text: '#80ffea' },
+  { bg: 'rgba(255,149,128,0.15)', border: '#ff9580', text: '#ff9580' },
+  { bg: 'rgba(230,192,255,0.15)', border: '#e6c0ff', text: '#e6c0ff' },
 ];
 
 function labelColor(label) {
