@@ -269,53 +269,6 @@ function showToast(msg) {
   toast._timer = setTimeout(function() { toast.classList.remove('show'); }, 2500);
 }
 
-function showUndoToast(snoozeId, categoryLabel, browserTabId) {
-  const SECS = _settings.undoSecs || 8;
-  const toast = getToast();
-  clearInterval(toast._interval);
-  clearTimeout(toast._timer);
-
-  let remaining = SECS;
-  let closeTimer = browserTabId
-    ? setTimeout(function() { chrome.tabs.remove(browserTabId); }, SECS * 1000)
-    : null;
-
-  function render() {
-    toast.innerHTML = browserTabId
-      ? '<span class="toast-msg">' + categoryLabel + ' ✓</span>' +
-        '<button class="toast-undo">' + t('undoBtn') + '</button>' +
-        '<span class="toast-secs">' + remaining + 's</span>'
-      : '<span class="toast-msg">' + categoryLabel + ' ✓</span>' +
-        '<button class="toast-undo">' + t('undoBtn') + '</button>';
-
-    toast.querySelector('.toast-undo').addEventListener('click', function() {
-      clearInterval(toast._interval);
-      clearTimeout(closeTimer);
-      toast.classList.remove('show');
-      undoSnooze(snoozeId);
-    });
-  }
-
-  render();
-  toast.classList.add('show');
-
-  toast._interval = setInterval(function() {
-    remaining--;
-    if (remaining <= 0) {
-      clearInterval(toast._interval);
-      toast.classList.remove('show');
-    } else {
-      render();
-    }
-  }, 1000);
-}
-
-async function undoSnooze(snoozeId) {
-  await deleteTabFromStorage(snoozeId);
-  chrome.alarms.clear(ALARM_PREFIX + snoozeId);
-  renderLists();
-  showToast('↩ ' + t('undoBtn'));
-}
 
 var _dragSrcId = null;
 
@@ -675,8 +628,9 @@ async function saveCurrent(snoozeType) {
     : snoozeType === 'daily' ? t('addToDaily')
     : t('someday');
 
+  if (snoozeType !== 'daily') chrome.tabs.remove(tab.id);
   renderLists();
-  showUndoToast(id, label, snoozeType !== 'daily' ? tab.id : null);
+  showToast(label + ' ✓');
 }
 
 // ─── Snooze all other open tabs ───────────────────────────────────────────────
@@ -711,50 +665,9 @@ async function snoozeAllTabs(snoozeType) {
   chrome.tabs.remove(browserTabIds);
   document.getElementById('all-tabs-section').classList.add('hidden');
   renderLists();
-
-  const label = t('tabsSaved').replace('{n}', targets.length);
-  showBatchUndoToast(savedIds, label);
+  showToast(t('tabsSaved').replace('{n}', targets.length));
 }
 
-async function undoBatchSnooze(snoozeIds) {
-  const keys = snoozeIds.map(function(id) { return STORAGE_PREFIX + id; });
-  const data = await chrome.storage.local.get(keys);
-  const urls = snoozeIds
-    .map(function(id) { return data[STORAGE_PREFIX + id]; })
-    .filter(function(tab) { return tab && tab.url; })
-    .map(function(tab) { return tab.url; });
-
-  for (const id of snoozeIds) {
-    await deleteTabFromStorage(id);
-    chrome.alarms.clear(ALARM_PREFIX + id);
-  }
-  for (let i = 0; i < urls.length; i++) {
-    chrome.tabs.create({ url: urls[i], active: i === urls.length - 1 });
-  }
-
-  document.getElementById('all-tabs-section').classList.remove('hidden');
-  renderLists();
-  showToast('↩ ' + t('undoBtn'));
-}
-
-function showBatchUndoToast(snoozeIds, label) {
-  const toast = getToast();
-  clearInterval(toast._interval);
-  clearTimeout(toast._timer);
-
-  toast.innerHTML =
-    '<span class="toast-msg">' + label + '</span>' +
-    '<button class="toast-undo">' + t('undoBtn') + '</button>';
-
-  toast.querySelector('.toast-undo').addEventListener('click', function() {
-    clearTimeout(toast._timer);
-    toast.classList.remove('show');
-    undoBatchSnooze(snoozeIds);
-  });
-
-  toast.classList.add('show');
-  toast._timer = setTimeout(function() { toast.classList.remove('show'); }, (_settings.undoSecs || 8) * 1000);
-}
 
 // ─── Render ───────────────────────────────────────────────────────────────────
 
