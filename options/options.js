@@ -9,7 +9,14 @@ function calcWakeAt(snoozeType, s) {
     const { h, m } = parseTime(s.todayTime);
     const d = new Date();
     d.setHours(h, m, 0, 0);
-    if (d.getTime() <= now) d.setTime(now + 2 * 60 * 60 * 1000);
+    if (d.getTime() <= now) {
+      const twoHoursLater = new Date(now + 2 * 60 * 60 * 1000);
+      if (twoHoursLater.toDateString() === new Date().toDateString()) {
+        d.setTime(twoHoursLater.getTime());
+      } else {
+        d.setHours(23, 30, 0, 0);
+      }
+    }
     return d.getTime();
   }
   if (snoozeType === 'week') {

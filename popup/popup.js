@@ -148,7 +148,14 @@ function endOfToday() {
   const { h, m } = parseTime(_settings.todayTime);
   const d = new Date();
   d.setHours(h, m, 0, 0);
-  if (d.getTime() <= Date.now()) d.setTime(Date.now() + 2 * 60 * 60 * 1000);
+  if (d.getTime() <= Date.now()) {
+    const twoHoursLater = new Date(Date.now() + 2 * 60 * 60 * 1000);
+    if (twoHoursLater.toDateString() === new Date().toDateString()) {
+      d.setTime(twoHoursLater.getTime());
+    } else {
+      d.setHours(23, 30, 0, 0);
+    }
+  }
   return d.getTime();
 }
 
