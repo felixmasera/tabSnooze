@@ -628,9 +628,12 @@ async function saveCurrent(snoozeType) {
     : snoozeType === 'daily' ? t('addToDaily')
     : t('someday');
 
-  if (snoozeType !== 'daily') chrome.tabs.remove(tab.id);
-  renderLists();
-  showToast(label + ' ✓');
+  if (snoozeType !== 'daily') {
+    chrome.tabs.remove(tab.id);
+  } else {
+    renderLists();
+    showToast(label + ' ✓');
+  }
 }
 
 // ─── Snooze all other open tabs ───────────────────────────────────────────────
