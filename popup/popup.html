@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TabSnooze</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">💤</span>
+        <span class="logo-text">TabSnooze</span>
+      </div>
+      <div class="header-actions">
+        <button id="btn-archive-view" class="btn-ghost" data-i18n-title="viewArchived" title="View archived tabs">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="21 8 21 21 3 21 3 8"></polyline>
+            <rect x="1" y="3" width="22" height="5"></rect>
+            <line x1="10" y1="12" x2="14" y2="12"></line>
+          </svg>
+        </button>
+        <button id="btn-settings" class="btn-ghost" data-i18n-title="settings" title="Settings">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Mascot -->
+    <div class="mascot-section">
+      <div id="mascot-container" class="mascot-container">
+        <svg id="mascot-svg" width="260" height="200" viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="screenGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#1a1a2e" stop-opacity="1"/>
+              <stop offset="100%" stop-color="#0d0d18" stop-opacity="1"/>
+            </radialGradient>
+            <linearGradient id="lidGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#2a1f4a"/>
+              <stop offset="100%" stop-color="#1a1030"/>
+            </linearGradient>
+            <clipPath id="screenClip">
+              <rect x="34" y="18" width="192" height="122" rx="2"/>
+            </clipPath>
+            <style>
+              @keyframes bubbleRise {
+                0%   { transform: translateY(30px); opacity: 0;   }
+                12%  { opacity: 0.85; }
+                80%  { opacity: 0.55; }
+                100% { transform: translateY(0px);  opacity: 0;   }
+              }
+              .zzz-1 { animation: bubbleRise 2.2s ease-in infinite; animation-delay: 0s;    }
+              .zzz-2 { animation: bubbleRise 2.2s ease-in infinite; animation-delay: 0.72s; }
+              .zzz-3 { animation: bubbleRise 2.2s ease-in infinite; animation-delay: 1.44s; }
+            </style>
+          </defs>
+
+          <!-- Laptop body — rx=22 -->
+          <rect x="22" y="10" width="216" height="138" rx="22" fill="url(#lidGrad)" stroke="#bd93f9" stroke-width="1.5"/>
+          <rect x="28" y="16" width="204" height="126" rx="16" fill="#050510" stroke="rgba(189,147,249,0.3)" stroke-width="1"/>
+          <rect x="34" y="18" width="192" height="122" rx="2" fill="url(#screenGlow)"/>
+
+          <!-- Screen content (clipped) -->
+          <g clip-path="url(#screenClip)">
+            <!-- Title bar -->
+            <rect x="34" y="18" width="192" height="10" fill="rgba(40,42,54,0.9)"/>
+            <circle cx="42" cy="23" r="3" fill="#ff5555" opacity="0.85"/>
+            <circle cx="52" cy="23" r="3" fill="#ffb86c" opacity="0.85"/>
+            <circle cx="62" cy="23" r="3" fill="#50fa7b" opacity="0.85"/>
+            <text x="95" y="26" font-family="monospace" font-size="6" fill="rgba(248,248,242,0.35)">snoozy.js — TabSnooze</text>
+
+            <!-- Dynamic code block — populated by mascot.js -->
+            <g id="code-block"></g>
+          </g>
+
+          <!-- Eyes — drawn outside clip so they overlay the screen -->
+          <ellipse id="eye-l" cx="88" cy="32" rx="9" ry="9" fill="#050510" stroke="#bd93f9" stroke-width="1.2"/>
+          <ellipse id="eye-r" cx="172" cy="32" rx="9" ry="9" fill="#050510" stroke="#bd93f9" stroke-width="1.2"/>
+          <circle cx="88" cy="32" r="5" fill="#7f77dd"/>
+          <circle cx="172" cy="32" r="5" fill="#7f77dd"/>
+          <circle id="pupil-l" cx="89" cy="31" r="2.5" fill="#50fa7b"/>
+          <circle id="pupil-r" cx="173" cy="31" r="2.5" fill="#50fa7b"/>
+          <circle id="shine-l" cx="90" cy="30" r="1" fill="white" opacity="0.6"/>
+          <circle id="shine-r" cx="174" cy="30" r="1" fill="white" opacity="0.6"/>
+
+          <!-- Mouth -->
+          <path id="mouth" d="M104 112 Q130 120 156 112" stroke="#50fa7b" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+          <!-- Base / keyboard — rx=10 -->
+          <rect x="10" y="148" width="240" height="16" rx="10" fill="url(#lidGrad)" stroke="#bd93f9" stroke-width="1"/>
+          <rect x="95" y="152" width="70" height="8" rx="2" fill="#0d0d18" stroke="rgba(189,147,249,0.3)" stroke-width="0.5"/>
+          <rect x="4" y="162" width="252" height="8" rx="6" fill="#150f28" stroke="rgba(189,147,249,0.2)" stroke-width="0.5"/>
+
+          <!-- ZZZ bubbles — float up from top-left of laptop -->
+          <g class="zzz-1">
+            <circle cx="28" cy="6" r="4.5" fill="rgba(189,147,249,0.12)" stroke="#bd93f9" stroke-width="1"/>
+            <text x="28" y="6" font-family="monospace" font-size="5.5" fill="#bd93f9" text-anchor="middle" dominant-baseline="central">z</text>
+          </g>
+          <g class="zzz-2">
+            <circle cx="41" cy="-1" r="6.5" fill="rgba(189,147,249,0.12)" stroke="#bd93f9" stroke-width="1"/>
+            <text x="41" y="-1" font-family="monospace" font-size="8" fill="#bd93f9" text-anchor="middle" dominant-baseline="central">z</text>
+          </g>
+          <g class="zzz-3">
+            <circle cx="56" cy="-9" r="8.5" fill="rgba(189,147,249,0.12)" stroke="#bd93f9" stroke-width="1.2"/>
+            <text x="56" y="-9" font-family="monospace" font-size="10" fill="#bd93f9" text-anchor="middle" dominant-baseline="central">z</text>
+          </g>
+        </svg>
+      </div>
+      <span id="mood-label" class="mood-label">neutral</span>
+    </div>
+
+    <div id="save-section" class="save-section">
+      <div class="current-tab" id="current-tab-info">
+        <span class="tab-favicon" id="current-favicon"></span>
+        <span class="tab-title" id="current-title">Loading...</span>
+      </div>
+      <div class="snooze-options">
+        <button class="snooze-btn" data-snooze="today">
+          <span class="snooze-icon">☀️</span>
+          <span class="snooze-label" data-i18n="today">Today</span>
+          <span class="snooze-time" id="time-today"></span>
+        </button>
+        <button class="snooze-btn" data-snooze="week">
+          <span class="snooze-icon">📅</span>
+          <span class="snooze-label" data-i18n="thisWeek">This week</span>
+          <span class="snooze-time" id="time-week"></span>
+        </button>
+        <button class="snooze-btn" data-snooze="someday">
+          <span class="snooze-icon">🌙</span>
+          <span class="snooze-label" data-i18n="someday">Someday</span>
+          <span class="snooze-time" data-i18n="noAlarm">No alarm</span>
+        </button>
+      </div>
+      <button class="snooze-btn snooze-btn-daily" data-snooze="daily">
+        <span class="snooze-icon">🔁</span>
+        <span class="snooze-label" data-i18n="addToDaily">Daily routine</span>
+        <span class="snooze-time" id="time-daily"></span>
+      </button>
+    </div>
+
+    <div id="all-tabs-section" class="all-tabs-section hidden">
+      <div class="all-tabs-header">
+        <span class="all-tabs-icon">📚</span>
+        <span id="all-tabs-label"></span>
+      </div>
+      <div class="all-tabs-actions">
+        <button class="snooze-all-btn" data-snooze="today">☀️ <span data-i18n="today">Today</span></button>
+        <button class="snooze-all-btn" data-snooze="week">📅 <span data-i18n="thisWeek">Week</span></button>
+        <button class="snooze-all-btn" data-snooze="someday">🌙 <span data-i18n="someday">Someday</span></button>
+      </div>
+    </div>
+
+    <div id="tabs-list" class="tabs-list">
+      <div id="label-filter-bar" class="label-filter-bar hidden">
+        <span class="filter-prefix" data-i18n="labelFilterPrefix">label:</span>
+        <span class="filter-chip"></span>
+        <button id="label-filter-clear" class="filter-clear">×</button>
+      </div>
+
+      <div id="group-daily" class="group group-daily hidden">
+        <div class="group-header">
+          <span data-i18n="dailyGroup">Daily</span>
+          <span class="group-count" id="count-daily">0</span>
+        </div>
+        <ul id="list-daily" class="tab-items"></ul>
+      </div>
+
+      <div id="group-today" class="group hidden">
+        <div class="group-header">
+          <span data-i18n="today">Today</span>
+          <span class="group-count" id="count-today">0</span>
+        </div>
+        <ul id="list-today" class="tab-items"></ul>
+      </div>
+
+      <div id="group-week" class="group hidden">
+        <div class="group-header">
+          <span data-i18n="thisWeek">This week</span>
+          <span class="group-count" id="count-week">0</span>
+        </div>
+        <ul id="list-week" class="tab-items"></ul>
+      </div>
+
+      <div id="group-someday" class="group hidden">
+        <div class="group-header">
+          <span data-i18n="someday">Someday</span>
+          <span class="group-count" id="count-someday">0</span>
+        </div>
+        <ul id="list-someday" class="tab-items"></ul>
+      </div>
+
+      <div id="empty-state" class="empty-state hidden">
+        <span class="empty-icon">🎉</span>
+        <p data-i18n="noPendingTitle">No pending tabs.</p>
+        <p data-i18n="noPendingBody">Your browser is clean!</p>
+      </div>
+    </div>
+
+    <div id="archive-view" class="archive-view hidden">
+      <div class="archive-header">
+        <button id="btn-back" class="btn-ghost">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          <span data-i18n="back">Back</span>
+        </button>
+        <span data-i18n="archivedTabs">Archived tabs</span>
+      </div>
+      <ul id="list-archive" class="tab-items"></ul>
+      <div id="archive-empty" class="empty-state hidden">
+        <span class="empty-icon">📭</span>
+        <p data-i18n="noArchivedYet">No archived tabs yet.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="../shared/settings.js"></script>
+  <script src="../shared/i18n.js"></script>
+  <script src="mascot.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

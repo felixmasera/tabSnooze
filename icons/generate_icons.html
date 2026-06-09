@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head><title>Generate Icons</title></head>
+<body>
+<p>Open DevTools console and run the script, then save the PNGs.</p>
+<canvas id="c16" width="16" height="16"></canvas>
+<canvas id="c48" width="48" height="48"></canvas>
+<canvas id="c128" width="128" height="128"></canvas>
+
+<script>
+function drawIcon(canvas) {
+  const size = canvas.width;
+  const ctx = canvas.getContext('2d');
+  const r = size * 0.08;
+
+  // Background rounded rect
+  ctx.fillStyle = '#7c6cf0';
+  roundRect(ctx, 0, 0, size, size, size * 0.22);
+  ctx.fill();
+
+  // Moon emoji-style crescent
+  ctx.fillStyle = '#ffffff';
+  const cx = size / 2, cy = size / 2 - size * 0.04;
+  const or = size * 0.32;
+  const ir = size * 0.22;
+  ctx.beginPath();
+  ctx.arc(cx, cy, or, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#7c6cf0';
+  ctx.beginPath();
+  ctx.arc(cx + size * 0.1, cy - size * 0.06, ir, 0, Math.PI * 2);
+  ctx.fill();
+
+  // ZZZ dots
+  ctx.fillStyle = '#ffffff';
+  const dotR = Math.max(1, size * 0.05);
+  [[0.62, 0.62],[0.72, 0.72],[0.62, 0.82]].forEach(([x, y]) => {
+    ctx.beginPath();
+    ctx.arc(x * size, y * size, dotR, 0, Math.PI * 2);
+    ctx.fill();
+  });
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+['c16','c48','c128'].forEach(id => {
+  const canvas = document.getElementById(id);
+  drawIcon(canvas);
+  const link = document.createElement('a');
+  link.download = `icon${canvas.width}.png`;
+  link.href = canvas.toDataURL();
+  link.textContent = `Download icon${canvas.width}.png`;
+  link.style.display = 'block';
+  document.body.appendChild(link);
+});
+</script>
+</body>
+</html>

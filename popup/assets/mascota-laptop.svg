@@ -1,0 +1,106 @@
+<svg width="260" height="200" viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="screenGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1a1a2e" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#0d0d18" stop-opacity="1"/>
+    </radialGradient>
+    <linearGradient id="lidGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2a1f4a"/>
+      <stop offset="100%" stop-color="#1a1030"/>
+    </linearGradient>
+    <clipPath id="screenClip">
+      <rect x="34" y="18" width="192" height="122" rx="2"/>
+    </clipPath>
+    <style>
+      @keyframes bubbleRise {
+        0%   { transform: translateY(30px); opacity: 0;    }
+        12%  { opacity: 0.85; }
+        80%  { opacity: 0.55; }
+        100% { transform: translateY(0px);  opacity: 0;    }
+      }
+      .zzz-1 { animation: bubbleRise 2.2s ease-in infinite; animation-delay: 0s;    }
+      .zzz-2 { animation: bubbleRise 2.2s ease-in infinite; animation-delay: 0.72s; }
+      .zzz-3 { animation: bubbleRise 2.2s ease-in infinite; animation-delay: 1.44s; }
+    </style>
+  </defs>
+
+  <!-- Tapa / cuerpo principal — rx=22 -->
+  <rect x="22" y="10" width="216" height="138" rx="22" fill="url(#lidGrad)" stroke="#bd93f9" stroke-width="1.5"/>
+  <rect x="28" y="16" width="204" height="126" rx="16" fill="#050510" stroke="rgba(189,147,249,0.3)" stroke-width="1"/>
+  <rect x="34" y="18" width="192" height="122" rx="2" fill="url(#screenGlow)"/>
+
+  <!-- Contenido pantalla -->
+  <g clip-path="url(#screenClip)">
+    <!-- Barra de título -->
+    <rect x="34" y="18" width="192" height="10" fill="rgba(40,42,54,0.8)"/>
+    <circle cx="42" cy="23" r="3" fill="#ff5555" opacity="0.8"/>
+    <circle cx="52" cy="23" r="3" fill="#ffb86c" opacity="0.8"/>
+    <circle cx="62" cy="23" r="3" fill="#50fa7b" opacity="0.8"/>
+    <text x="95" y="26" font-family="monospace" font-size="6" fill="rgba(248,248,242,0.4)">snoozy.js — TabSnooze</text>
+
+    <!-- Código con syntax highlighting -->
+    <text x="38" y="42" font-family="monospace" font-size="7.5" fill="#6272a4">1  </text>
+    <text x="52" y="42" font-family="monospace" font-size="7.5" fill="#ff79c6">const </text>
+    <text x="84" y="42" font-family="monospace" font-size="7.5" fill="#50fa7b">snooze</text>
+    <text x="120" y="42" font-family="monospace" font-size="7.5" fill="#f8f8f2"> = (</text>
+    <text x="141" y="42" font-family="monospace" font-size="7.5" fill="#ffb86c">tabs</text>
+    <text x="165" y="42" font-family="monospace" font-size="7.5" fill="#f8f8f2">) =&gt; {</text>
+
+    <text x="38" y="54" font-family="monospace" font-size="7.5" fill="#6272a4">2  </text>
+    <text x="58" y="54" font-family="monospace" font-size="7.5" fill="#8be9fd">tabs</text>
+    <text x="86" y="54" font-family="monospace" font-size="7.5" fill="#f8f8f2">.</text>
+    <text x="90" y="54" font-family="monospace" font-size="7.5" fill="#50fa7b">forEach</text>
+    <text x="132" y="54" font-family="monospace" font-size="7.5" fill="#f8f8f2">(</text>
+    <text x="136" y="54" font-family="monospace" font-size="7.5" fill="#ffb86c">tab</text>
+    <text x="154" y="54" font-family="monospace" font-size="7.5" fill="#f8f8f2"> =&gt;</text>
+
+    <text x="38" y="66" font-family="monospace" font-size="7.5" fill="#6272a4">3  </text>
+    <text x="64" y="66" font-family="monospace" font-size="7.5" fill="#8be9fd">tab</text>
+    <text x="82" y="66" font-family="monospace" font-size="7.5" fill="#f8f8f2">.</text>
+    <text x="86" y="66" font-family="monospace" font-size="7.5" fill="#50fa7b">sleep</text>
+    <text x="114" y="66" font-family="monospace" font-size="7.5" fill="#f8f8f2">(</text>
+    <text x="118" y="66" font-family="monospace" font-size="7.5" fill="#bd93f9">tomorrow</text>
+    <text x="166" y="66" font-family="monospace" font-size="7.5" fill="#f8f8f2">)</text>
+
+    <text x="38" y="78" font-family="monospace" font-size="7.5" fill="#6272a4">4  </text>
+    <text x="52" y="78" font-family="monospace" font-size="7.5" fill="#f8f8f2">}</text>
+
+    <rect x="34" y="95" width="192" height="1" fill="rgba(98,114,164,0.2)"/>
+
+    <text x="38" y="108" font-family="monospace" font-size="7" fill="#6272a4">// output:</text>
+    <text x="38" y="119" font-family="monospace" font-size="7" fill="#50fa7b">✓ 47 tabs sleeping soundly</text>
+    <text x="38" y="130" font-family="monospace" font-size="7" fill="#bd93f9">→ next wakeup: mañana 9am</text>
+  </g>
+
+  <!-- Ojos -->
+  <ellipse cx="88" cy="32" rx="9" ry="9" fill="#050510" stroke="#bd93f9" stroke-width="1.2"/>
+  <ellipse cx="172" cy="32" rx="9" ry="9" fill="#050510" stroke="#bd93f9" stroke-width="1.2"/>
+  <circle cx="88" cy="32" r="5" fill="#7f77dd"/>
+  <circle cx="172" cy="32" r="5" fill="#7f77dd"/>
+  <circle cx="89" cy="31" r="2.5" fill="#50fa7b"/>
+  <circle cx="173" cy="31" r="2.5" fill="#50fa7b"/>
+  <circle cx="90" cy="30" r="1" fill="white" opacity="0.6"/>
+  <circle cx="174" cy="30" r="1" fill="white" opacity="0.6"/>
+
+  <!-- Boca -->
+  <path d="M104 112 Q130 118 156 112" stroke="#50fa7b" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+  <!-- Base / teclado — rx=10 -->
+  <rect x="10" y="148" width="240" height="16" rx="10" fill="url(#lidGrad)" stroke="#bd93f9" stroke-width="1"/>
+  <rect x="95" y="152" width="70" height="8" rx="2" fill="#0d0d18" stroke="rgba(189,147,249,0.3)" stroke-width="0.5"/>
+  <rect x="4" y="162" width="252" height="8" rx="6" fill="#150f28" stroke="rgba(189,147,249,0.2)" stroke-width="0.5"/>
+
+  <!-- Burbujas ZZZ flotantes — top-left de la laptop -->
+  <g class="zzz-1">
+    <circle cx="28" cy="6" r="4.5" fill="rgba(189,147,249,0.12)" stroke="#bd93f9" stroke-width="1"/>
+    <text x="28" y="6" font-family="monospace" font-size="5.5" fill="#bd93f9" text-anchor="middle" dominant-baseline="central">z</text>
+  </g>
+  <g class="zzz-2">
+    <circle cx="41" cy="-1" r="6.5" fill="rgba(189,147,249,0.12)" stroke="#bd93f9" stroke-width="1"/>
+    <text x="41" y="-1" font-family="monospace" font-size="8" fill="#bd93f9" text-anchor="middle" dominant-baseline="central">z</text>
+  </g>
+  <g class="zzz-3">
+    <circle cx="56" cy="-9" r="8.5" fill="rgba(189,147,249,0.12)" stroke="#bd93f9" stroke-width="1.2"/>
+    <text x="56" y="-9" font-family="monospace" font-size="10" fill="#bd93f9" text-anchor="middle" dominant-baseline="central">z</text>
+  </g>
+</svg>
