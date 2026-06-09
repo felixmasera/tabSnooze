@@ -1,6 +1,24 @@
 const ALARM_PREFIX = 'snooze_';
 const STORAGE_PREFIX = 'ts_';
 
+function playNotificationSound() {
+  if (typeof AudioContext === 'undefined') return;
+  try {
+    const ctx = new AudioContext();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    osc.frequency.setValueAtTime(660, ctx.currentTime + 0.15);
+    gain.gain.setValueAtTime(0.4, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.6);
+  } catch (e) {}
+}
+
 const NOTIF_STRINGS = {
   en: { title: 'TabSnooze — Tab ready', open: 'Open tab', snooze: 'Snooze 1h' },
   es: { title: 'TabSnooze — Pestaña lista', open: 'Abrir pestaña', snooze: 'Posponer 1h' },
@@ -169,17 +187,19 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   const tab = await getTabById(tabId);
   if (!tab || tab.status !== 'pending') return;
 
+  playNotificationSound();
+
   const lang = await getLang();
   const s = NOTIF_STRINGS[lang] || NOTIF_STRINGS.en;
 
-  chrome.notifications.create('notif_' + tabId, {
+  const isFirefox = typeof browser !== 'undefined';
+  chrome.notifications.create('notif_' + tabId, Object.assign({
     type: 'basic',
     iconUrl: chrome.runtime.getURL('icons/icon48.png'),
     title: s.title,
     message: tab.title || tab.url,
     buttons: [{ title: s.open }, { title: s.snooze }],
-    requireInteraction: true,
-  });
+  }, isFirefox ? {} : { requireInteraction: true }));
 
   if (tab.snoozeType === 'daily') {
     const wakeAt = await nextDailyWakeAt();
