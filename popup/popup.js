@@ -55,8 +55,9 @@ var LABEL_COLORS = [
 ];
 
 function labelColor(label) {
+  var key = (label || '').trim().toLowerCase();
   var h = 0;
-  for (var i = 0; i < label.length; i++) { h = ((h << 5) - h) + label.charCodeAt(i); h |= 0; }
+  for (var i = 0; i < key.length; i++) { h = ((h << 5) - h) + key.charCodeAt(i); h |= 0; }
   return LABEL_COLORS[Math.abs(h) % LABEL_COLORS.length];
 }
 
@@ -73,8 +74,9 @@ async function addKnownLabel(label) {
 }
 
 async function setTabLabel(id, label) {
-  await updateTab(id, { label: label || null });
-  if (label) await addKnownLabel(label);
+  const normalized = label ? label.trim() : null;
+  await updateTab(id, { label: normalized || null });
+  if (normalized) await addKnownLabel(normalized);
   renderLists();
 }
 
@@ -568,8 +570,8 @@ function renderTabItem(tab, opts) {
 // ─── Actions ─────────────────────────────────────────────────────────────────
 
 async function openAndArchive(id, url) {
-  chrome.tabs.create({ url });
   await archiveTab(id, 'read');
+  chrome.tabs.create({ url });
 }
 
 const ARCHIVE_LIMIT = 35;
