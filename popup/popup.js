@@ -44,6 +44,7 @@ async function saveDailyOrder(order) {
 // ─── Labels ───────────────────────────────────────────────────────────────────
 
 var _filterLabel = null;
+var _labelColors = {};
 
 var LABEL_COLORS = [
   { bg: 'rgba(80,250,123,0.15)',  border: '#50fa7b', text: '#50fa7b' },
@@ -60,9 +61,32 @@ var LABEL_COLORS = [
 
 function labelColor(label) {
   var key = (label || '').trim().toLowerCase();
+  if (_labelColors[key] !== undefined) return LABEL_COLORS[_labelColors[key] % LABEL_COLORS.length];
   var h = 0;
   for (var i = 0; i < key.length; i++) { h = ((h << 5) - h) + key.charCodeAt(i); h |= 0; }
   return LABEL_COLORS[Math.abs(h) % LABEL_COLORS.length];
+}
+
+async function loadLabelColors() {
+  const data = await chrome.storage.local.get(['ts_label_colors', 'ts_labels']);
+  _labelColors = data.ts_label_colors || {};
+  if (!data.ts_label_colors && data.ts_labels && data.ts_labels.length) {
+    data.ts_labels.forEach(function(label, i) {
+      var key = label.trim().toLowerCase();
+      if (_labelColors[key] === undefined) _labelColors[key] = i;
+    });
+    await chrome.storage.local.set({ ts_label_colors: _labelColors });
+  }
+}
+
+async function assignLabelColor(label) {
+  var key = (label || '').trim().toLowerCase();
+  if (!key || _labelColors[key] !== undefined) return;
+  var used = Object.values(_labelColors);
+  var idx = 0;
+  while (used.includes(idx)) idx++;
+  _labelColors[key] = idx;
+  await chrome.storage.local.set({ ts_label_colors: _labelColors });
 }
 
 async function getKnownLabels() {
@@ -72,6 +96,7 @@ async function getKnownLabels() {
 
 async function addKnownLabel(label) {
   if (!label) return;
+  await assignLabelColor(label);
   const labels = await getKnownLabels();
   const fresh = [label, ...labels.filter(function(l) { return l !== label; })].slice(0, 20);
   await chrome.storage.local.set({ ts_labels: fresh });
@@ -785,6 +810,7 @@ async function migrateStorage() {
 
 async function init() {
   await migrateStorage();
+  await loadLabelColors();
   _settings = await loadSettings();
   setLang(resolveLanguage(_settings));
   applyI18n();
