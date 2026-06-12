@@ -2,9 +2,9 @@
   "manifest_version": 3,
   "name": "TabSnooze",
   "short_name": "TabSnooze",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Felix Masera",
-  "description": "Snooze tabs for later — Today, This Week, Someday, or Daily. Keep your browser clean without losing anything important.",
+  "description": "Tab manager that snoozes tabs for later. Close tabs now, get them back on schedule. Declutter your browser without losing tabs.",
   "permissions": [
     "tabs",
     "storage",

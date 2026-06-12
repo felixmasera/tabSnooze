@@ -6,7 +6,7 @@
 
 **Summary / Short description** (máx. 132 caracteres):
 ```
-Snooze tabs for later — Today, This Week, Someday, or Daily. Keep your browser clean without losing anything important.
+Tab manager that snoozes tabs for later. Close tabs now, get them back on schedule. Declutter your browser without losing tabs.
 ```
 
 **Category:** Productivity → Workflow & Planning
@@ -15,7 +15,7 @@ Snooze tabs for later — Today, This Week, Someday, or Daily. Keep your browser
 
 **Detailed description:**
 ```
-Too many open tabs? TabSnooze lets you send tabs away and brings them back exactly when you need them.
+Too many open tabs? TabSnooze is a tab manager that lets you snooze tabs: close them now and have them reopen automatically at the right time. Save tabs for later, declutter your browser, and stop losing important pages in tab overload.
 
 HOW IT WORKS
 • Click the TabSnooze icon and pick when you want the tab back:
@@ -36,9 +36,19 @@ FEATURES
 • Archive of everything you've read or dismissed
 • Available in English, Español and Português (auto-detected)
 
+PERFECT FOR
+• Tab hoarders who keep 30+ tabs open "to read later"
+• Following up on emails, articles, flight prices or job posts at the right moment
+• Replacing messy bookmarks with reminders that actually come back to you
+• Keeping a clean, fast browser without losing anything
+
 PRIVACY FIRST
 TabSnooze stores everything locally in your browser. No accounts, no servers, no tracking, no data collection. See the privacy policy for details.
+
+Snooze it now, see it when it matters. Try TabSnooze and reach tab inbox zero.
 ```
+
+> Nota: estos textos optimizados con keywords (tab manager, snooze tabs, save tabs for later, declutter, read later) se aplican en el dashboard recién DESPUÉS de que aprueben la v1.0.0 — editar el listing durante la revisión puede cancelarla.
 
 **Screenshots (1280×800):**
 - `screenshot1.png` — popup con pestañas guardadas

@@ -891,6 +891,10 @@ async function init() {
     chrome.tabs.create({ url: chrome.runtime.getURL('options/options.html') });
   });
 
+  document.getElementById('btn-donate').addEventListener('click', function() {
+    chrome.tabs.create({ url: 'https://ko-fi.com/felixmasera' });
+  });
+
   document.getElementById('label-filter-clear').addEventListener('click', function() {
     _filterLabel = null;
     renderLists();
