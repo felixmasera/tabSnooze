@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="shot-base.css" />
+  <style>
+    body { flex-direction: column; justify-content: center; align-items: center; }
+    h1.center { font-size: 46px; font-weight: 800; margin: 0 0 48px; text-align: center; }
+    h1.center .hl { color: #bd93f9; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; width: 980px; }
+    .card {
+      background: rgba(189,147,249,0.07);
+      border: 1px solid rgba(189,147,249,0.3);
+      border-radius: 16px;
+      padding: 30px 34px;
+      box-sizing: border-box;
+    }
+    .card .ico { font-size: 34px; display: block; margin-bottom: 14px; }
+    .card h2 { font-size: 22px; margin: 0 0 8px; color: #f8f8f2; }
+    .card p { font-size: 17px; line-height: 1.5; margin: 0; color: rgba(248,248,242,0.7); }
+  </style>
+</head>
+<body>
+  <div class="brand">💤 Tab<span class="accent">Snooze</span></div>
+  <h1 class="center">Everything you need to <span class="hl">tame your tabs</span></h1>
+  <div class="grid">
+    <div class="card">
+      <span class="ico">🖱️</span>
+      <h2>Right-click any link</h2>
+      <p>Snooze links straight from the page — without even opening them.</p>
+    </div>
+    <div class="card">
+      <span class="ico">🔔</span>
+      <h2>Smart reminders</h2>
+      <p>A notification and a badge counter tell you when tabs are ready.</p>
+    </div>
+    <div class="card">
+      <span class="ico">🏷️</span>
+      <h2>Labels &amp; daily routine</h2>
+      <p>Tag tabs, filter by label, and keep a reorderable list of everyday sites.</p>
+    </div>
+    <div class="card">
+      <span class="ico">🌎</span>
+      <h2>Speaks your language</h2>
+      <p>English, Español and Português — picked automatically from your browser.</p>
+    </div>
+  </div>
+</body>
+</html>

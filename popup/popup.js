@@ -230,15 +230,11 @@ function isToday(ts) {
 }
 
 function isThisWeek(ts) {
-  if (!ts) return false;
-  const d = new Date(ts);
-  const now = new Date();
-  const start = new Date(now);
-  start.setDate(now.getDate() - now.getDay());
-  start.setHours(0, 0, 0, 0);
-  const end = new Date(start);
-  end.setDate(start.getDate() + 7);
-  return d >= start && d < end && !isToday(ts);
+  if (!ts || isToday(ts)) return false;
+  const limit = new Date();
+  limit.setDate(limit.getDate() + 7);
+  limit.setHours(23, 59, 59, 999);
+  return ts > Date.now() && ts <= limit.getTime();
 }
 
 function categoryFor(tab) {
