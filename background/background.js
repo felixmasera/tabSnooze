@@ -175,6 +175,7 @@ async function setupContextMenus() {
 chrome.contextMenus.onClicked.addListener(async (info) => {
   const type = info.menuItemId.replace('ts-', '');
   if (type === 'parent' || !info.linkUrl) return;
+  if (!/^https?:\/\//i.test(info.linkUrl)) return;
   await saveTabEntry(info.linkUrl, info.linkText || info.linkUrl, type);
 });
 
@@ -192,14 +193,25 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   const lang = await getLang();
   const s = NOTIF_STRINGS[lang] || NOTIF_STRINGS.en;
 
+  // Firefox does not support notification buttons — passing them throws
   const isFirefox = typeof browser !== 'undefined';
-  chrome.notifications.create('notif_' + tabId, Object.assign({
+  const notifOpts = {
     type: 'basic',
     iconUrl: chrome.runtime.getURL('icons/icon48.png'),
     title: s.title,
     message: tab.title || tab.url,
-    buttons: [{ title: s.open }, { title: s.snooze }],
-  }, isFirefox ? {} : { requireInteraction: true }));
+  };
+  if (!isFirefox) {
+    notifOpts.buttons = [{ title: s.open }, { title: s.snooze }];
+    notifOpts.requireInteraction = true;
+  }
+  chrome.notifications.create('notif_' + tabId, notifOpts);
+
+  if (tabId.startsWith('test_')) {
+    await chrome.storage.local.remove(STORAGE_PREFIX + tabId);
+    updateBadge();
+    return;
+  }
 
   if (tab.snoozeType === 'daily') {
     const wakeAt = await nextDailyWakeAt();
@@ -230,10 +242,25 @@ chrome.notifications.onButtonClicked.addListener(async (notifId, buttonIndex) =>
   }
 });
 
-chrome.notifications.onClicked.addListener((notifId) => {
+chrome.notifications.onClicked.addListener(async (notifId) => {
   if (!notifId.startsWith('notif_')) return;
   chrome.notifications.clear(notifId);
-  chrome.action.openPopup?.();
+
+  // Firefox has no notification buttons, so a body click opens the tab directly
+  if (typeof browser !== 'undefined') {
+    const tabId = notifId.slice('notif_'.length);
+    const tab = await getTabById(tabId);
+    if (tab) {
+      chrome.tabs.create({ url: tab.url });
+      if (tab.snoozeType !== 'daily') await archiveTab(tabId, 'read');
+    }
+    return;
+  }
+
+  try {
+    const p = chrome.action.openPopup?.();
+    if (p && p.catch) p.catch(function() {});
+  } catch (e) {}
 });
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

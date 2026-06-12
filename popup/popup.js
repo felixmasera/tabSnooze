@@ -288,7 +288,11 @@ function showToast(msg) {
   const toast = getToast();
   clearInterval(toast._interval);
   clearTimeout(toast._timer);
-  toast.innerHTML = '<span class="toast-msg">' + msg + '</span>';
+  toast.textContent = '';
+  const msgSpan = document.createElement('span');
+  msgSpan.className = 'toast-msg';
+  msgSpan.textContent = msg;
+  toast.appendChild(msgSpan);
   toast.classList.add('show');
   toast._timer = setTimeout(function() { toast.classList.remove('show'); }, 2500);
 }
@@ -636,10 +640,20 @@ async function purgeTab(id, liEl) {
 
 // ─── Snooze current tab ───────────────────────────────────────────────────────
 
+function isSnoozableUrl(url) {
+  return !!url &&
+    !url.startsWith('chrome://') &&
+    !url.startsWith('chrome-extension://') &&
+    !url.startsWith('about:') &&
+    !url.startsWith('moz-extension://') &&
+    !url.startsWith('edge://');
+}
+
 async function saveCurrent(snoozeType) {
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
   const tab = tabs[0];
   if (!tab) return;
+  if (!isSnoozableUrl(tab.url)) { showToast(t('cantSnoozePage')); return; }
 
   const wakeAt = snoozeTime(snoozeType);
   const id = 'tab_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
@@ -666,12 +680,7 @@ async function snoozeAllTabs(snoozeType) {
   const allOpen = await chrome.tabs.query({ currentWindow: true });
   const cur = allOpen.find(function(tab) { return tab.active; }) || null;
   const targets = allOpen.filter(function(tab) {
-    return tab.id !== (cur && cur.id) &&
-      tab.url &&
-      !tab.url.startsWith('chrome://') &&
-      !tab.url.startsWith('chrome-extension://') &&
-      !tab.url.startsWith('about:') &&
-      !tab.url.startsWith('moz-extension://');
+    return tab.id !== (cur && cur.id) && isSnoozableUrl(tab.url);
   });
 
   if (!targets.length) return;
@@ -842,12 +851,7 @@ async function init() {
 
   // Other open tabs section
   const otherTabs = allOpen.filter(function(tab) {
-    return tab.id !== (currentTab && currentTab.id) &&
-      tab.url &&
-      !tab.url.startsWith('chrome://') &&
-      !tab.url.startsWith('chrome-extension://') &&
-      !tab.url.startsWith('about:') &&
-      !tab.url.startsWith('moz-extension://');
+    return tab.id !== (currentTab && currentTab.id) && isSnoozableUrl(tab.url);
   });
 
   if (otherTabs.length > 0) {
